@@ -4,7 +4,8 @@ import Counters from '../../mook/counters'
 
 class index extends Component {
     state = {
-        counter: Counters,
+        counter: Counters
+
 
     }
 
@@ -12,54 +13,84 @@ class index extends Component {
 
 
     handelincrees = (counterid) => {
+        this.setState((prestate) => {
+            return {
+                counter: prestate.counter.map((item) => {
+                    if (item.id === counterid) {
+                        return {
+                            ...item,
+                            value: item.value + item.amount
 
-        this.setState((state) => {
-            state.counter.map((item) => {
-                if (item.id === counterid) {
-                    return {
-                        ...item,
-                        value: item.value + 1
+                        }
 
                     }
+                    return item
+                })
 
-                }
-                return item
-            })
+
+            }
         })
 
     }
     handeldecrees = (counterid) => {
-
-        this.setState((state) => {
-            state.counter.map((item) => {
-                if (item.id === counterid) {
-                    return {
-                        ...item,
-                        value: item.value - 1
-
+        this.setState((prestate) => {
+            return {
+                counter: prestate.counter.map((item) => {
+                    if (item.id === counterid && item.value > 0) {
+                        return {
+                            ...item,
+                            value: item.value - item.amount
+                        }
                     }
+                    return item
+                })
 
-                }
-                return item
-            })
+            }
+
         })
+
+
 
     }
 
 
 
+
+
+
+
     render() {
+
+        const calculateTotal = () => {
+            let total = 0;
+            this.state.counter.map((item) => {
+                total = total + item.value;
+            });
+            return total;
+        };
 
         return (
             <div>
                 {
                     this.state.counter.map((item) => {
                         return (
-                            <Counter key={item.id} counternum={item.value} incrres={() => { this.handelincrees(item.id) }} decrees={() => { this.handeldecrees(item.id) }} />
+                            <>
+                                <Counter key={item.id}
 
+                                    counternum={item.value > 0 ? item.value : 0}
+                                    incrres={() => this.handelincrees(item.id)}
+                                    decrees={() => this.handeldecrees(item.id)} />
+
+                            </>
                         )
                     })
+
+
                 }
+
+                <h1 style={{ textAlign: 'center' }}> Totle : {calculateTotal()}</h1>
+
+
 
 
 
